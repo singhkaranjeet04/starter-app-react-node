@@ -80,19 +80,19 @@ The four premade configurations are designed for each of the primary use cases s
 | :---: | ---- |
 | <img src="https://github.com/smartcar/starter-app-react-node/assets/119897746/678747b3-d0dc-45dc-8ba6-dad27ba25eef" alt="connect page" width=300px /> | The app includes the implementation of Smartcar Connect, allowing users to authorize vehicles through the Connect flow. |
 | <img src="https://github.com/smartcar/starter-app-react-node/assets/119897746/c17decc4-4af6-46bd-b632-1c15ceba1b1f" alt="auto insurance" width=300px /> | `autoInsuranceConfig`: **Single Select** allows the user to connect one of their vehicles. Once authorized, the user can review up-to-date and accurate vehicle data, including VIN, mileage, location, engine oil, and tire pressure. |
-| <img src="https://github.com/smartcar/starter-app-react-node/assets/119897746/5da617d8-82ee-4309-9127-ac0d65ac7e7d" alt="energy utilities" width=300px /> | `energyUtilitiesConfig`: **Brand Select** (TESLA) skips the brand selection step of the Connect flow and directs the user to the Tesla login page. Once connected, the user can review various EV statistics of their Tesla vehicle, such as charge state, time to completion, battery level, battery range, charge limit, battery capacity, voltage, wattage, and amperage. The user may also perform actions such as starting and stopping charge, setting the charge limit, and setting the amperage. |
+| <img src="https://github.com/smartcar/starter-app-react-node/assets/119897746/5da617d8-82ee-4309-9127-ac0d65ac7e7d" alt="energy utilities" width=300px /> | `energyUtilitiesConfig`: **Brand Select** (Ford) skips the brand selection step of the Connect flow and directs the user to the Ford login page. Once connected, the user can review various EV statistics of their Ford vehicle, such as charge state, time to completion, battery level, battery range, charge limit, battery capacity, voltage, wattage, and amperage. The user may also perform actions such as starting and stopping charge, setting the charge limit, and setting the amperage. |
 | <img src="https://github.com/smartcar/starter-app-react-node/assets/119897746/a8f27c68-739c-4e61-a169-a8b007fe712c" alt="car share" width=300px /> | `carShareConfig`: Once authorized, the user can review the vehicle's location, odometer, and fuel tank or battery status (depending on the vehicle). Additionally, users can lock and unlock the vehicle. |
 | <img src="https://github.com/smartcar/starter-app-react-node/assets/119897746/4392e843-3b5d-407a-a74c-eb98f1c02fb3" alt="roadside assistance" width=300px />___________________________________________ | `roadsideAssistanceConfig`: Retrieve up-to-date status about a vehicle's location, odometer, tire pressure, and engine oil. |
 
 # Adding new endpoints:
 This starter app includes popular Smartcar endpoints, but we're constantly working to add new ones. Here is an example of adding the `read_compass` endpoint to give you an idea for adding a simple `GET` endpoint.
 1. Check the [documentation for read_compass](https://smartcar.com/docs/api-reference/tesla/get-compass-heading).
-2. This endpoint has two properties: heading and direction. I only want **direction** so I'll add that as a property in config.js in the client repo. Note that this is a Tesla-specific endpoint
+2. This endpoint has two properties: heading and direction. I only want **direction** so I'll add that as a property in config.js in the client repo. Note that this is a Ford -specific endpoint
 ```
 direction: {
   name: 'direction',
   permission: 'read_compass',
-  supportedMakes: ['TESLA'],
+  supportedMakes: ['FORD'],
   requestType: 'GET',
   componentType: 'VehicleProperty',
   text: 'Direction',
@@ -101,14 +101,14 @@ direction: {
 3. Now I'll include `properties.direction` to my config.
 3. Looking at the payload in the documentation, I'm happy with using the returned string for direction as is "SW", so in the `staticText` object in `Properties.jsx`, I'll add
    `direction: (status) => status,` which will output the returned string in the Vehicle details page.
-5. In the `vehicleProperties.js` file in the server, I'll need to add a field for direction. I can check the documentation to see how this Tesla endpoint is constructed. In debug mode, I saw that `batchResponse` now has a `teslaCompass` method which returns an object with a `direction` field, which I will return.
+5. In the `vehicleProperties.js` file in the server, I'll need to add a field for direction. I can check the documentation to see how this Ford endpoint is constructed. In debug mode, I saw that `batchResponse` now has a `Fordendeabour` method which returns an object with a `direction` field, which I will return.
 ```
   direction: {
     endpoint: (make) => `/${make.toLowerCase()}/compass`,
-    supportedMakes: ['TESLA'],
+    supportedMakes: ['FORD'],
     process: (batchResponse, make) => {
       try {
-        if (make === 'TESLA') {
+        if (make === 'FORD') {
           return batchResponse.teslaCompass().direction;
         }
         throw new Error ('Unsupported make')
@@ -118,7 +118,7 @@ direction: {
     },
   }
 ```
-6. Test the flow with a Tesla vehicle, you should now see a Direction field displayed.
+6. Test the flow with a Ford vehicle, you should now see a Direction field displayed.
 
 That concludes an example for adding a new GET endpoint. For adding new POST endpoints, that may involve adding a new component type in `Properties.jsx` and a new method in `api.js` on the client. On the server, a new route may be needed.
 
