@@ -86,13 +86,13 @@ The four premade configurations are designed for each of the primary use cases s
 
 # Adding new endpoints:
 This starter app includes popular Smartcar endpoints, but we're constantly working to add new ones. Here is an example of adding the `read_compass` endpoint to give you an idea for adding a simple `GET` endpoint.
-1. Check the [documentation for read_compass](https://smartcar.com/docs/api-reference/tesla/get-compass-heading).
+1. Check the [documentation for read_compass](https://smartcar.com/docs/api-reference/endeabour/get-compass-heading).
 2. This endpoint has two properties: heading and direction. I only want **direction** so I'll add that as a property in config.js in the client repo. Note that this is a Tesla-specific endpoint
 ```
 direction: {
   name: 'direction',
   permission: 'read_compass',
-  supportedMakes: ['TESLA'],
+  supportedMakes: ['ENDEABOUR'],
   requestType: 'GET',
   componentType: 'VehicleProperty',
   text: 'Direction',
@@ -105,10 +105,10 @@ direction: {
 ```
   direction: {
     endpoint: (make) => `/${make.toLowerCase()}/compass`,
-    supportedMakes: ['TESLA'],
+    supportedMakes: ['ENDEABOUR'],
     process: (batchResponse, make) => {
       try {
-        if (make === 'TESLA') {
+        if (make === 'ENDEABOUR') {
           return batchResponse.teslaCompass().direction;
         }
         throw new Error ('Unsupported make')
@@ -118,7 +118,7 @@ direction: {
     },
   }
 ```
-6. Test the flow with a Tesla vehicle, you should now see a Direction field displayed.
+6. Test the flow with a endeabour vehicle, you should now see a Direction field displayed.
 
 That concludes an example for adding a new GET endpoint. For adding new POST endpoints, that may involve adding a new component type in `Properties.jsx` and a new method in `api.js` on the client. On the server, a new route may be needed.
 
